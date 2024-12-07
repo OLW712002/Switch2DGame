@@ -10,10 +10,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float jumpForce = 1.0f;
 
     Rigidbody2D myRigidbody;
+    CapsuleCollider2D myBodyCollider;
 
     void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
+        myBodyCollider = GetComponent<CapsuleCollider2D>();
         
     }
 
@@ -24,7 +26,9 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnJump(InputValue value)
     {
-        if (value.isPressed)
+        Vector2 myFeetPosition = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - myBodyCollider.size.y / 2);
+        Collider2D isGround = Physics2D.OverlapCircle(myFeetPosition, 0.25f, LayerMask.GetMask("Ground"));
+        if (value.isPressed && isGround != null)
         {
             Debug.Log("Jump");
             myRigidbody.velocity = new Vector2(0f, jumpForce);
@@ -33,8 +37,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        moveSpeed = -moveSpeed;
-        FlipPlayer();
+        if (collision.tag == "Ground")
+        {
+            moveSpeed = -moveSpeed;
+            FlipPlayer();
+        }
+        
     }
 
     private void FlipPlayer()
