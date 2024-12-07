@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -11,12 +12,13 @@ public class PlayerMovement : MonoBehaviour
 
     Rigidbody2D myRigidbody;
     CapsuleCollider2D myBodyCollider;
+    Animator myAnimator;
 
     void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
         myBodyCollider = GetComponent<CapsuleCollider2D>();
-        
+        myAnimator = GetComponent<Animator>();
     }
 
     void Update()
@@ -26,12 +28,12 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnJump(InputValue value)
     {
-        Vector2 myFeetPosition = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - myBodyCollider.size.y / 2);
+        Vector2 myFeetPosition = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - myBodyCollider.size.y * Math.Sign(myRigidbody.gravityScale) / 2);
         Collider2D isGround = Physics2D.OverlapCircle(myFeetPosition, 0.25f, LayerMask.GetMask("Ground", "GravityInteract", "TeleportInteract"));
         if (value.isPressed && isGround != null)
         {
             Debug.Log("Jump");
-            myRigidbody.velocity = new Vector2(0f, jumpForce);
+            myRigidbody.velocity = new Vector2(0f, jumpForce * Math.Sign(myRigidbody.gravityScale));
         }
     }
 
@@ -53,7 +55,24 @@ public class PlayerMovement : MonoBehaviour
             moveSpeed = -moveSpeed;
             FlipPlayer();
         }
-        
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Trap")
+        {
+            //myRigidbody.velocity = new Vector2(0f, 0f);
+            myRigidbody.transform.localScale = new Vector2(1.0f, 1.0f);
+            myRigidbody.gravityScale = Math.Abs(-myRigidbody.gravityScale);
+            moveSpeed = 0;
+            myAnimator.SetTrigger("Dying");
+            Invoke("ResetLevel", 1.5f);
+        }
+    }
+
+    void ResetLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     private void FlipPlayer()
