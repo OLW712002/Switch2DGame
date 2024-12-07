@@ -27,11 +27,22 @@ public class PlayerMovement : MonoBehaviour
     public void OnJump(InputValue value)
     {
         Vector2 myFeetPosition = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - myBodyCollider.size.y / 2);
-        Collider2D isGround = Physics2D.OverlapCircle(myFeetPosition, 0.25f, LayerMask.GetMask("Ground"));
+        Collider2D isGround = Physics2D.OverlapCircle(myFeetPosition, 0.25f, LayerMask.GetMask("Ground", "GravityInteract", "TeleportInteract"));
         if (value.isPressed && isGround != null)
         {
             Debug.Log("Jump");
             myRigidbody.velocity = new Vector2(0f, jumpForce);
+        }
+    }
+
+    public void OnInteract(InputValue value)
+    {
+        if (value.isPressed && myBodyCollider.IsTouchingLayers(LayerMask.GetMask("GravityInteract", "TeleportInteract")))
+        {
+            if (myBodyCollider.IsTouchingLayers(LayerMask.GetMask("TeleportInteract")))
+                gameObject.transform.position = new Vector2(gameObject.transform.position.x, gameObject.transform.position.y - Math.Sign(myRigidbody.gravityScale) * 3.2f);
+            myRigidbody.transform.localScale = new Vector2(Math.Sign(moveSpeed), -myRigidbody.transform.localScale.y);
+            myRigidbody.gravityScale = -myRigidbody.gravityScale;
         }
     }
 
@@ -47,6 +58,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void FlipPlayer()
     {
-        myRigidbody.transform.localScale = new Vector2(Math.Sign(moveSpeed), 1.0f);
+        myRigidbody.transform.localScale = new Vector2(Math.Sign(moveSpeed), myRigidbody.transform.localScale.y);
     }
 }

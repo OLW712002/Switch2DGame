@@ -9,12 +9,12 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Interactable
+  - 
   - Water
   - UI
   - Ground
-  - 
-  - 
+  - TeleportInteract
+  - GravityInteract
   - 
   - 
   - 
@@ -50,6 +50,9 @@ TagManager:
     locked: 0
   - name: Interactable
     uniqueID: 362768275
+    locked: 0
+  - name: Pickups
+    uniqueID: 3309524671
     locked: 0
   - name: Player
     uniqueID: 133731873
