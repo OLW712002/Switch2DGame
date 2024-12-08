@@ -1,25 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Pickups : MonoBehaviour
 {
+    UIScripts UIScripts;
+    private void Start()
+    {
+        UIScripts = FindObjectOfType<UIScripts>();
+    }
     private void Update()
     {
-        Debug.Log("ImChecking");
         if (transform.childCount == 0)
         {
-            Debug.Log("NextLevel");
-            Invoke("NextLevel", 1.5f);
+            UIScripts.NegateDying();
+            StartCoroutine(CompleteLevel());
         }
     }
 
-    void NextLevel()
+    IEnumerator CompleteLevel()
     {
-        int numScene = SceneManager.sceneCountInBuildSettings;
-        int nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
-        if (nextSceneIndex == numScene) nextSceneIndex = 0;
-        SceneManager.LoadScene(nextSceneIndex);
+        yield return new WaitForSecondsRealtime(1.5f);
+        UIScripts.ShowGameCompleteScreen();
     }
 }

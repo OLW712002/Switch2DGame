@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -13,12 +12,14 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D myRigidbody;
     CapsuleCollider2D myBodyCollider;
     Animator myAnimator;
+    UIScripts UIScripts;
 
     void Start()
     {
         myRigidbody = GetComponent<Rigidbody2D>();
         myBodyCollider = GetComponent<CapsuleCollider2D>();
         myAnimator = GetComponent<Animator>();
+        UIScripts = FindObjectOfType<UIScripts>();
     }
 
     void Update()
@@ -59,25 +60,27 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Trap")
+        if (collision.gameObject.tag == "Trap" && !UIScripts.CheckImmortal())
         {
             //myRigidbody.velocity = new Vector2(0f, 0f);
             myRigidbody.transform.localScale = new Vector2(1.0f, 1.0f);
             myRigidbody.gravityScale = Math.Abs(-myRigidbody.gravityScale);
             moveSpeed = 0;
-            FindObjectOfType<UIScripts>().NegatePause();
+            UIScripts.NegatePause();
             myAnimator.SetTrigger("Dying");
-            Invoke("ResetLevel", 1.5f);
+            StartCoroutine(Dying());
         }
     }
 
-    void ResetLevel()
+    IEnumerator Dying()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        yield return new WaitForSecondsRealtime(1.5f);
+        UIScripts.ShowGameOverScreen();
     }
+
 
     private void FlipPlayer()
     {
-        myRigidbody.transform.localScale = new Vector2(Math.Sign(moveSpeed), myRigidbody.transform.localScale.y);
+        myRigidbody.transform.localScale = new Vector2(Mathf.Sign(moveSpeed), myRigidbody.transform.localScale.y);
     }
 }

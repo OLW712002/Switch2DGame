@@ -13,7 +13,7 @@ public class Coin : MonoBehaviour
         {
             isCollected = true;
             Destroy(gameObject);
-            AudioSource.PlayClipAtPoint(coinCollectSFX, gameObject.transform.position);
+            if (FindObjectOfType<GameSession>().CheckMusicOn()) AudioSource.PlayClipAtPoint(coinCollectSFX, gameObject.transform.position);
         }
     }
 }
