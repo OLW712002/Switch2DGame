@@ -65,6 +65,7 @@ public class PlayerMovement : MonoBehaviour
             myRigidbody.transform.localScale = new Vector2(1.0f, 1.0f);
             myRigidbody.gravityScale = Math.Abs(-myRigidbody.gravityScale);
             moveSpeed = 0;
+            FindObjectOfType<UIScripts>().NegatePause();
             myAnimator.SetTrigger("Dying");
             Invoke("ResetLevel", 1.5f);
         }
