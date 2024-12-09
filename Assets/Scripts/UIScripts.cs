@@ -22,14 +22,8 @@ public class UIScripts : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        stageText.text = "Stage: " + (SceneManager.GetActiveScene().buildIndex);
+        stageText.text = "  Stage: " + (SceneManager.GetActiveScene().buildIndex);
         StartCoroutine(CheckMusic());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     IEnumerator CheckMusic()

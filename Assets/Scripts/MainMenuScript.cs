@@ -8,17 +8,6 @@ public class MainMenuScript : MonoBehaviour
     [SerializeField] GameObject settingPopUp;
     [SerializeField] GameObject creditPopUp;
 
-    void Start()
-    {
-        
-    }
-
-    
-    void Update()
-    {
-        
-    }
-
     public void OpenSetting()
     {
         settingPopUp.SetActive(true);
