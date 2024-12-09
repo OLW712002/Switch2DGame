@@ -19,7 +19,6 @@ public class UIScripts : MonoBehaviour
     [SerializeField] GameObject gameOverState;
     [SerializeField] GameObject gameCompleteState;
 
-    // Start is called before the first frame update
     void Start()
     {
         stageText.text = "  Stage: " + (SceneManager.GetActiveScene().buildIndex);

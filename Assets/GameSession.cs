@@ -11,7 +11,7 @@ public class GameSession : MonoBehaviour
     [SerializeField] AudioSource congratulationMusic;
 
     bool isMusicOn = true;
-    bool needChangeMusic = true;
+    static bool needChangeMusic = true;
 
     private void Awake()
     {
@@ -35,17 +35,14 @@ public class GameSession : MonoBehaviour
 
         StopAllMusic();
 
-        Debug.Log("call music");
         int numActiveSceneIndex = SceneManager.GetActiveScene().buildIndex;
         if (numActiveSceneIndex == 0 && isMusicOn)
         {
             mainMenuMussic.Play();
-            Debug.Log("menu");
         }
         else if (numActiveSceneIndex < 5 && isMusicOn)
         {
             chillingMusic.Play();
-            Debug.Log("Lv1");
         }
         else if (numActiveSceneIndex < 10 && isMusicOn)
         {

@@ -8,6 +8,17 @@ public class MainMenuScript : MonoBehaviour
     [SerializeField] GameObject settingPopUp;
     [SerializeField] GameObject creditPopUp;
 
+    void Start()
+    {
+        StartCoroutine(CheckMusic());
+    }
+
+    IEnumerator CheckMusic()
+    {
+        yield return new WaitForSecondsRealtime(0.1f);
+        FindObjectOfType<GameSession>().MusicSettingForScenes();
+    }
+
     public void OpenSetting()
     {
         settingPopUp.SetActive(true);
